@@ -82,12 +82,12 @@
                 </select>
             </div>
             <div class="col">
-                <label>العرض (بالأمتار):</label>
-                <input type="number" id="itemWidth" step="0.01" placeholder="مثال: 1.20">
+                <label>العرض (متر):</label>
+                <input type="number" id="itemWidth" step="0.01" placeholder="مثال: 1">
             </div>
             <div class="col">
-                <label>الارتفاع (بالأمتار):</label>
-                <input type="number" id="itemHeight" step="0.01" placeholder="مثال: 1.5">
+                <label>الارتفاع (متر):</label>
+                <input type="number" id="itemHeight" step="0.01" placeholder="مثال: 1">
             </div>
             <div class="col">
                 <label>العدد:</label>
@@ -200,14 +200,15 @@
         const barLen = parseFloat(document.getElementById('barLength').value);
         const matType = document.getElementById('materialType').value;
 
-        // تجميع الأطوال بالأمتار المباشرة
+        // تجميع الأطوال بالأمتار
         let totalFrameMeters = 0;       // حلق
-        let totalWinMeters = 0;         // شباك
+        let totalWinMeters = 0;         // شباك (ضلفة)
         let totalDoorMeters = 0;        // باب
         let totalTMeters = 0;           // تي وجهين
         let totalPackitaNormMeters = 0; // باكيتا عادية
         let totalPackitaDoubleMeters = 0; // باكيتا دبل
         let totalRetiMeters = 0;        // عود ريتي
+        let totalIronMeters = 0;        // حديد تدعيم (سيخ)
 
         // أعداد العناصر والإكسسوارات
         let countWindows = 0;
@@ -223,25 +224,32 @@
         let retiCarriers = 0; // شيال
 
         // اكسسوارات ألومنيوم
-        let espagHandles = 0; // يد سبانيولية
-        let psCorners = 0;    // زوايا تجميع PS
+        let espagHandles = 0;
+        let psCorners = 0;
         let alumLock = 0;
 
         invoiceItems.forEach(item => {
-            const wM = item.w; // بالأمتار مباشرة
-            const hM = item.h; // بالأمتار مباشرة
+            const wM = item.w;
+            const hM = item.h;
             const qty = item.qty;
 
-            let frame = (wM + hM) * 2 * qty;
-            totalFrameMeters += frame;
+            // الحلق الإجمالي محيط الشباك/الباب
+            let framePerimeter = (wM + hM) * 2 * qty;
+            totalFrameMeters += framePerimeter;
+            
+            // حديد التدعيم يمتد على كامل أطوال الحلق
+            totalIronMeters += framePerimeter;
 
             if (item.type === 'door') {
                 countDoors += qty;
-                let doorSash = (wM + hM) * 2 * qty;
+                // خصم للحلق 5 سم
+                let sashW = wM - 0.05;
+                let sashH = hM - 0.05;
+                let doorSash = (sashW + sashH) * 2 * qty;
                 totalDoorMeters += doorSash;
 
                 if (matType === 'pvc') {
-                    totalPackitaDoubleMeters += frame * 2;
+                    totalPackitaDoubleMeters += doorSash;
                     lockFull += 1 * qty;
                     doorHinges += 4 * qty;
                 } else {
@@ -252,47 +260,62 @@
                 countWindows += qty;
 
                 if (matType === 'pvc') {
-                    totalPackitaNormMeters += frame * 2;
-
                     if (item.system === 'casement1') {
-                        let winSash = (wM + hM) * 2 * qty;
+                        // خصم 5 سم من أبعاد الضلفة المفصلية
+                        let sashW = wM - 0.05;
+                        let sashH = hM - 0.05;
+                        let winSash = (sashW + sashH) * 2 * qty;
+                        
                         totalWinMeters += winSash;
                         totalRetiMeters += winSash; // عود ريتي
-                        
+                        totalPackitaNormMeters += winSash;
+
                         winHandles += 1 * qty;
                         winHinges += 3 * qty;
-                        retiBones += 1 * qty;  // عظمة ريتي
-                        retiSeats += 1 * qty;
-                        retiCarriers += 1 * qty;
+                        
+                        // الإكسسوارات الخاصة بالريتي لكل ضلفة مفصلية
+                        retiBones += 4 * qty;     // 4 عظمات ريتي
+                        retiSeats += 2 * qty;     // 2 طقم كرسي
+                        retiCarriers += 2 * qty;  // 2 شيال
+
                     } else if (item.system === 'casement2') {
-                        let winSash = ((wM/2 + hM) * 2 * 2) * qty;
+                        // ضلفتين: العرض يقسم على 2 وخصم 5 سم
+                        let sashW = (wM / 2) - 0.05;
+                        let sashH = hM - 0.05;
+                        let winSash = ((sashW + sashH) * 2 * 2) * qty; // لضلفتين
+                        
                         totalWinMeters += winSash;
-                        totalTMeters += hM * qty; // T وجهين
-                        totalRetiMeters += winSash; // عود ريتي
+                        totalTMeters += hM * qty; // عود T وجهين في المنتصف
+                        totalRetiMeters += winSash;
+                        totalPackitaNormMeters += winSash;
 
                         winHandles += 2 * qty;
                         winHinges += 6 * qty;
-                        retiBones += 2 * qty;  // عظمة ريتي للضلفتين
-                        retiSeats += 2 * qty;
-                        retiCarriers += 2 * qty;
+                        
+                        // ريتي للضلفتين
+                        retiBones += 8 * qty;     // 4 عظمات لكل ضلفة = 8
+                        retiSeats += 4 * qty;     // 2 لكل ضلفة = 4
+                        retiCarriers += 4 * qty;  // 2 لكل ضلفة = 4
+
                     } else if (item.system === 'sliding') {
                         let winSash = (wM + hM) * 2 * qty;
                         totalWinMeters += winSash;
+                        totalPackitaNormMeters += winSash;
                     }
                 } else { // ألومنيوم
                     if (item.system === 'casement1') {
-                        let winSash = (wM + hM) * 2 * qty;
+                        let winSash = ((wM - 0.05) + (hM - 0.05)) * 2 * qty;
                         totalWinMeters += winSash;
                         espagHandles += 1 * qty;
                         winHinges += 3 * qty;
-                        psCorners += 8 * qty; // 4 ضلفة + 4 حلق
+                        psCorners += 8 * qty;
                     } else if (item.system === 'casement2') {
-                        let winSash = ((wM/2 + hM) * 2 * 2) * qty;
+                        let winSash = (((wM/2 - 0.05) + (hM - 0.05)) * 2 * 2) * qty;
                         totalWinMeters += winSash;
                         totalTMeters += hM * qty;
                         espagHandles += 2 * qty;
                         winHinges += 6 * qty;
-                        psCorners += 12 * qty; // 8 للضلفتين + 4 للحلق
+                        psCorners += 12 * qty;
                     } else if (item.system === 'sliding') {
                         let winSash = (wM + hM) * 2 * qty;
                         totalWinMeters += winSash;
@@ -302,7 +325,7 @@
             }
         });
 
-        // تحويل الأطوال إلى أعواد
+        // تحويل الأطوال إلى أعواد مع جبر الكسور لعود كامل
         let barsFrame = Math.ceil(totalFrameMeters / barLen);
         let barsWin = Math.ceil(totalWinMeters / barLen);
         let barsDoor = Math.ceil(totalDoorMeters / barLen);
@@ -310,8 +333,9 @@
         let barsPackitaNorm = Math.ceil(totalPackitaNormMeters / barLen);
         let barsPackitaDouble = Math.ceil(totalPackitaDoubleMeters / barLen);
         let barsReti = Math.ceil(totalRetiMeters / barLen);
+        let barsIron = Math.ceil(totalIronMeters / barLen);
 
-        // كتابة نص الفاتورة
+        // كتابة نص الفاتورة (أصناف وأعداد فقط)
         let output = `شركة أزادير (Azadir) - فرع القوارشة\n`;
         output += `فاتورة طلب مواد ${matType.toUpperCase()} (طول العود: ${barLen} متر)\n`;
         output += `------------------------------------\n`;
@@ -326,6 +350,7 @@
         if (barsReti > 0) output += `- عود ريتي: ${barsReti}\n`;
         if (barsPackitaNorm > 0) output += `- عود باكيتا عادية: ${barsPackitaNorm}\n`;
         if (barsPackitaDouble > 0) output += `- عود باكيتا دبل: ${barsPackitaDouble}\n`;
+        if (barsIron > 0) output += `- حديد تدعيم (سيخ): ${barsIron} عود\n`;
 
         output += `------------------------------------\n`;
         output += `الإكسسوارات المطلوبة:\n`;
