@@ -1,1 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شركة أزادير - حساب مقاسات الألومنيوم و PVC</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: #fff; border: 2px solid #2c3e50; border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 3px double #2c3e50; padding-bottom: 15px; margin-bottom: 20px; }
+        .header h1 { margin: 0; color: #1a252f; font-size: 26px; }
+        .header h3 { margin: 5px 0 0; color: #7f8c8d; font-size: 16px; }
+        .phone { font-weight: bold; color: #27ae60; font-size: 18px; margin-top: 5px; }
+        .tabs { display: flex; border-bottom: 2px solid #2c3e50; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 12px; border: none; background: #e0e6ed; cursor: pointer; font-weight: bold; font-size: 15px; color: #34495e; border-top-left-radius: 6px; border-top-right-radius: 6px; margin-left: 2px; }
+        .tab-btn.active { background: #2c3e50; color: #fff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+        .row { display: flex; gap: 15px; }
+        .col { flex: 1; }
+        button.btn-calc { width: 100%; background: #2980b9; color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        button.btn-calc:hover { background: #3498db; }
+        .result-box { margin-top: 25px; background: #fcfcfc; border: 1px solid #ddd; padding: 15px; border-radius: 4px; }
+        .result-title { font-weight: bold; font-size: 18px; color: #2c3e50; border-bottom: 1px solid #ccc; padding-bottom: 8px; margin-bottom: 12px; }
+        .whatsapp-btn { display: inline-block; width: 100%; text-align: center; background: #25D366; color: white; padding: 14px; font-size: 18px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; margin-top: 15px; box-sizing: border-box; }
+        .whatsapp-btn:hover { background: #1ebd56; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>شركة أزادير (Azadir)</h1>
+        <h3>فرع القوارشة - منظومة حساب الأعواد والإكسسوارات</h3>
+        <div class="phone">هاتف / واتساب: 0945110070</div>
+    </div>
+
+    <!-- الأقسام -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('pvc')">قسم PVC</button>
+        <button class="tab-btn" onclick="switchTab('alum')">قسم الألومنيوم</button>
+        <button class="tab-btn" onclick="switchTab('kitchen-alum')">مطابخ ألومنيوم</button>
+        <button class="tab-btn" onclick="switchTab('kitchen-mdf')">مطابخ MDF</button>
+    </div>
+
+    <!-- إعدادات طول العود -->
+    <div class="form-group" style="background: #eef2f5; padding: 10px; border-radius: 4px;">
+        <label>طول العود المعتمد في الحسابات:</label>
+        <select id="barLength">
+            <option value="5.80">5.80 متر</option>
+            <option value="6.50">6.50 متر</option>
+        </select>
+    </div>
+
+    <!-- قسم PVC -->
+    <div id="pvc" class="tab-content active">
+        <h3>حساب مقاسات PVC</h3>
+        <div class="form-group">
+            <label>نوع العنصر:</label>
+            <select id="pvcType" onchange="togglePvcOptions()">
+                <option value="door">باب</option>
+                <option value="window">شباك</option>
+            </select>
+        </div>
+        <div class="row">
+            <div class="col form-group">
+                <label>العرض (سم):</label>
+                <input type="number" id="pvcWidth" placeholder="مثال: 100">
+            </div>
+            <div class="col form-group">
+                <label>الارتفاع (سم):</label>
+                <input type="number" id="pvcHeight" placeholder="مثال: 210">
+            </div>
+        </div>
+        <div id="pvcWindowOptions" style="display:none;" class="form-group">
+            <label>نظام الفتح:</label>
+            <select id="pvcSystem">
+                <option value="casement1">مفصلي - ضلفة واحدة</option>
+                <option value="casement2">مفصلي - ضلفتين</option>
+                <option value="sliding">سحاب</option>
+                <option value="tilt">قلاب</option>
+            </select>
+        </div>
+        <button class="btn-calc" onclick="calculatePVC()">احسب الاحتياجات (PVC)</button>
+    </div>
+
+    <!-- قسم الألومنيوم -->
+    <div id="alum" class="tab-content">
+        <h3>حساب مقاسات الألومنيوم</h3>
+        <div class="form-group">
+            <label>نوع العنصر:</label>
+            <select id="alumType">
+                <option value="window_casement1">شباك مفصلي - ضلفة واحدة</option>
+                <option value="window_casement2">شباك مفصلي - ضلفتين</option>
+                <option value="window_sliding">شباك سحاب</option>
+                <option value="door">باب مفصلي</option>
+            </select>
+        </div>
+        <div class="row">
+            <div class="col form-group">
+                <label>العرض (سم):</label>
+                <input type="number" id="alumWidth" placeholder="مثال: 120">
+            </div>
+            <div class="col form-group">
+                <label>الارتفاع (سم):</label>
+                <input type="number" id="alumHeight" placeholder="مثال: 120">
+            </div>
+        </div>
+        <button class="btn-calc" onclick="calculateAlum()">احسب الاحتياجات (ألومنيوم)</button>
+    </div>
+
+    <!-- مطابخ ألومنيوم -->
+    <div id="kitchen-alum" class="tab-content">
+        <h3>قسم مطابخ الألومنيوم</h3>
+        <p>قم بإدخال المقاسات الإجمالية للوحدات لتقدير الأعواد والاكسسوارات.</p>
+        <div class="row">
+            <div class="col form-group"><label>إجمالي الطول (متر):</label><input type="number" id="ktAlumLen"></div>
+            <div class="col form-group"><label>عدد الضلف:</label><input type="number" id="ktAlumDoors"></div>
+        </div>
+        <button class="btn-calc" onclick="calculateKitchenAlum()">احسب مواد المطبخ</button>
+    </div>
+
+    <!-- مطابخ MDF -->
+    <div id="kitchen-mdf" class="tab-content">
+        <h3>قسم مطابخ MDF</h3>
+        <div class="row">
+            <div class="col form-group"><label>إجمالي الطول (متر):</label><input type="number" id="ktMdfLen"></div>
+            <div class="col form-group"><label>عدد الأبواب/الضلف:</label><input type="number" id="ktMdfDoors"></div>
+        </div>
+        <button class="btn-calc" onclick="calculateKitchenMDF()">احسب مواد MDF</button>
+    </div>
+
+    <!-- مخرجات الحساب -->
+    <div class="result-box" id="resultBox" style="display:none;">
+        <div class="result-title">كشف المواد والاكسسوارات المطلوبة:</div>
+        <div id="resultText"></div>
+        <a id="whatsappLink" href="#" target="_blank" class="whatsapp-btn">إرسال الطلبية عبر واتساب</a>
+    </div>
+</div>
+
+<script>
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        document.getElementById('resultBox').style.display = 'none';
+    }
+
+    function togglePvcOptions() {
+        const type = document.getElementById('pvcType').value;
+        document.getElementById('pvcWindowOptions').style.display = (type === 'window') ? 'block' : 'none';
+    }
+
+    function calculatePVC() {
+        const type = document.getElementById('pvcType').value;
+        const w = parseFloat(document.getElementById('pvcWidth').value) || 0;
+        const h = parseFloat(document.getElementById('pvcHeight').value) || 0;
+        const barLen = parseFloat(document.getElementById('barLength').value);
+        
+        if (!w || !h) { alert('الرجاء إدخال المقاسات بشكل صحيح'); return; }
+
+        let totalPerimeter = ((w + h) * 2) / 100; // بالمتر
+        let bars = Math.ceil((totalPerimeter * 1.5) / barLen); // تقدير الأعواد مع الهالك
+        let acc = "";
+
+        if (type === 'door') {
+            acc = `- قفل باب كامل: 1\n- مفصلات باب: 4\n- تجاليد: 3 أعواد\n- حديد تدعيم: ${Math.ceil(totalPerimeter / barLen)} عود (${barLen}م)`;
+        } else {
+            const sys = document.getElementById('pvcSystem').value;
+            if (sys === 'casement1') {
+                acc = `- يد شباك: 1\n- مفصلات: 3\n- سكة مفصلي: 1\n- مثبت: 3\n- حديد تدعيم: حسب المقاس (~${(totalPerimeter * 0.4).toFixed(1)} متر)`;
+            } else if (sys === 'casement2') {
+                acc = `- يد شباك: 2\n- مفصلات: 6\n- مثبت: 6\n- حديد تدعيم: حسب المقاس (~${(totalPerimeter * 0.7).toFixed(1)} متر)`;
+            } else if (sys === 'sliding') {
+                acc = `- عجلات سحاب: 4\n- أقفال سحاب: 2\n- فرش أمان وجوان سحب`;
+            } else {
+                acc = `- مقبض قلاب: 1\n- مقص قلاب: 2\n- مفصلات قلاب: 2`;
+            }
+        }
+
+        showResult("PVC", type === 'door' ? "باب" : "شباك", w, h, barLen, bars, acc);
+    }
+
+    function calculateAlum() {
+        const type = document.getElementById('alumType').value;
+        const w = parseFloat(document.getElementById('alumWidth').value) || 0;
+        const h = parseFloat(document.getElementById('alumHeight').value) || 0;
+        const barLen = parseFloat(document.getElementById('barLength').value);
+
+        if (!w || !h) { alert('الرجاء إدخال المقاسات بشكل صحيح'); return; }
+
+        let totalPerimeter = ((w + h) * 2) / 100;
+        let bars = Math.ceil((totalPerimeter * 1.6) / barLen);
+        let acc = "";
+
+        if (type === 'window_casement1') {
+            acc = `- يد سبانيولية: 1\n- تسكيك: 1\n- زوايا تجميع PS: 8 قطع (4 للضلفة + 4 للحلق)\n- مفصلات ألومنيوم: 3`;
+        } else if (type === 'window_casement2') {
+            acc = `- يد سبانيولية: 2\n- تسكيك: 2\n- زوايا تجميع PS: 12 قطعة (8 للضلفتين + 4 للحلق)\n- مفصلات ألومنيوم: 6`;
+        } else if (type === 'window_sliding') {
+            acc = `- عجلات سحاب ألومنيوم: 4\n- قفل سحاب / سكاكة: 2\n- زوايا تجميع: 8 قطع`;
+        } else {
+            acc = `- كيلون باب ألومنيوم: 1\n- مفصلات باب ثقيلة: 3\n- مقبض باب: 1 طقم`;
+        }
+
+        showResult("ألومنيوم", "شباك/باب", w, h, barLen, bars, acc);
+    }
+
+    function calculateKitchenAlum() {
+        const len = parseFloat(document.getElementById('ktAlumLen').value) || 0;
+        const doors = parseInt(document.getElementById('ktAlumDoors').value) || 0;
+        const barLen = parseFloat(document.getElementById('barLength').value);
+        
+        let bars = Math.ceil((len * 3) / barLen);
+        let acc = `- مفصلات مطبخ: ${doors * 2} قطعة\n- مقابض: ${doors} قطعة\n- أرجول مطبخ: ${Math.ceil(len * 2)} قطع`;
+        showResult("مطابخ ألومنيوم", "مطبخ", len * 100, 85, barLen, bars, acc);
+    }
+
+    function calculateKitchenMDF() {
+        const len = parseFloat(document.getElementById('ktMdfLen').value) || 0;
+        const doors = parseInt(document.getElementById('ktMdfDoors').value) || 0;
+        
+        let sheets = Math.ceil(len / 1.2); // تقدير ألواح MDF
+        let acc = `- مفصلات هيدروليك: ${doors * 2} قطعة\n- مقابض مودرن: ${doors} قطعة\n- شريط قشاط: ${Math.ceil(len * 4)} متر`;
+        
+        const resText = `القسم: مطابخ MDF\nالطول: ${len} متر\nعدد الألواح المقدر: ${sheets} لوح\nالاكسسوارات:\n${acc}`;
+        renderOutput(resText);
+    }
+
+    function showResult(section, item, w, h, barLen, bars, acc) {
+        const text = `شركة أزادير - فرع القوارشة\nطلب تجسير مواد (${section})\nالصنف: ${item}\nالمقاس: ${w} سم × ${h} سم\nطول العود المعتمـد: ${barLen} متر\nعدد الأعواد المطلوب: ${bars} عود\nالاكسسوارات:\n${acc}`;
+        renderOutput(text);
+    }
+
+    function renderOutput(text) {
+        document.getElementById('resultText').innerText = text;
+        document.getElementById('resultBox').style.display = 'block';
+        
+        const encodedText = encodeURIComponent(text);
+        document.getElementById('whatsappLink').href = `https://wa.me/218945110070?text=${encodedText}`;
+    }
+</script>
+
+</body>
+</html>
 
