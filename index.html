@@ -3,379 +3,395 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>شركة أزادير - حساب مقاسات PVC والألومنيوم</title>
+    <title>منظومة أزادير للمبيعات والحسابات المتكاملة</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 950px; margin: auto; background: #fff; border: 2px solid #2c3e50; border-radius: 8px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .header { text-align: center; border-bottom: 3px double #2c3e50; padding-bottom: 15px; margin-bottom: 20px; }
-        .header h1 { margin: 0; color: #1a252f; font-size: 26px; }
-        .header h3 { margin: 5px 0 0; color: #7f8c8d; font-size: 16px; }
-        .phone { font-weight: bold; color: #27ae60; font-size: 18px; margin-top: 5px; }
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #0d9488;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --bg: #f8fafc;
+        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; }
+        body { background-color: var(--bg); margin: 0; padding: 15px; color: #1e293b; }
         
-        .form-section { background: #f8f9fa; border: 1px solid #dcdfe6; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
-        .row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-        .col { flex: 1; min-width: 130px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; }
-        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
-        
-        .btn-add { background: #27ae60; color: white; border: none; padding: 10px 15px; font-size: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 5px; }
-        .btn-add:hover { background: #219150; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #bdc3c7; padding: 8px; text-align: center; font-size: 14px; }
-        th { background: #34495e; color: white; }
-        .btn-del { background: #c0392b; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; }
+        /* Navigation Tabs */
+        .nav-tabs { display: flex; gap: 8px; margin-bottom: 15px; background: #fff; padding: 10px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .tab-btn { padding: 10px 20px; border: none; background: #e2e8f0; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .tab-btn.active { background: var(--primary); color: white; }
 
-        .result-box { margin-top: 25px; background: #fff; border: 2px solid #2980b9; padding: 15px; border-radius: 6px; }
-        .result-title { font-weight: bold; font-size: 18px; color: #2c3e50; border-bottom: 2px solid #2980b9; padding-bottom: 8px; margin-bottom: 12px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Cards & Forms */
+        .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 12px; }
+        input, select { padding: 9px; border: 1px solid #cbd5e1; border-radius: 5px; width: 100%; }
         
-        .whatsapp-btn { display: inline-block; width: 100%; text-align: center; background: #25D366; color: white; padding: 14px; font-size: 18px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; margin-top: 15px; box-sizing: border-box; }
-        .whatsapp-btn:hover { background: #1ebd56; }
+        button { background: var(--primary); color: white; border: none; padding: 9px 16px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { opacity: 0.9; }
+        .btn-success { background: var(--success); }
+        .btn-danger { background: var(--danger); }
+        .btn-print { background: #475569; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: right; }
+        th { background: #f1f5f9; color: #334155; }
+        
+        /* تلوين البضاعة حسب حالة المخزون */
+        tr.stock-out { background-color: #fee2e2 !important; } /* أحمر: نفد المخزون */
+        tr.stock-low { background-color: #fef3c7 !important; } /* أصفر: محدد بالأمان */
+        tr.stock-ok { background-color: #dcfce7 !important; }  * أخضر: متوفر بكثرة */
+
+        /* الطباعة */
+        @media print {
+            .nav-tabs, .form-grid, button, .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            .card { box-shadow: none; padding: 0; }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>شركة أزادير (Azadir)</h1>
-        <h3>فرع القوارشة - منظومة PVC والألومنيوم (حسب قوانين الورشة)</h3>
-        <div class="phone">هاتف / واتساب: 0945110070</div>
+    <h2 style="text-align: center; color: var(--primary); margin-top: 0;">منظومة أزادير (Azadir POS & Accounting)</h2>
+
+    <!-- الشغلات والتنقل -->
+    <div class="nav-tabs no-print">
+        <button class="tab-btn active" onclick="switchTab('pos')">شاشة البيع والفواتير</button>
+        <button class="tab-btn" onclick="switchTab('inventory')">المخزن (تلوين البضاعة)</button>
+        <button class="tab-btn" onclick="switchTab('customers')">الزبائن والحسابات (مدين/دائن)</button>
+        <button class="tab-btn" onclick="switchTab('reports')">التقارير وجرد نهاية السنة</button>
     </div>
 
-    <!-- إعداد العود والمنظومة -->
-    <div class="form-section">
-        <div class="row">
-            <div class="col">
-                <label>القسم / المادة:</label>
-                <select id="materialType" onchange="resetInvoiceOnMaterialChange()">
-                    <option value="pvc">PVC</option>
-                    <option value="alum">ألومنيوم</option>
-                </select>
+    <!-- 1. شاشة البيع -->
+    <div id="pos" class="tab-content active">
+        <div class="card">
+            <h3>فاتورة مبيعات جديدة</h3>
+            <div class="form-grid">
+                <select id="posCustomer"><option value="">اختر الزبون (نقدي)</option></select>
+                <input type="text" id="posBarcode" placeholder="امسح الباركود واضغط Enter" onkeydown="if(event.key==='Enter') addToCart()">
+                <button onclick="addToCart()">إضافة للفاتورة</button>
             </div>
-            <div class="col">
-                <label>طول العود المعتمد (متر):</label>
-                <select id="barLength">
-                    <option value="5.80">5.80 متر</option>
-                    <option value="6.50">6.50 متر</option>
-                </select>
+            <table>
+                <thead>
+                    <tr><th>السلعة</th><th>السعر</th><th>الكمية</th><th>الإجمالي</th><th>إجراء</th></tr>
+                </thead>
+                <tbody id="cartTable"></tbody>
+            </table>
+            <h3 style="text-align: left;">الإجمالي: <span id="cartTotal">0.00</span> د.ل</h3>
+            <div class="form-grid no-print">
+                <input type="number" id="paidAmount" placeholder="المبلغ المدفوع (نقداً)">
+                <button class="btn-success" onclick="checkout('Cash')">دفع نقداً</button>
+                <button class="btn-danger" onclick="checkout('Credit')">حفظ كـ (دَيْن / آجل)</button>
+                <button class="btn-print" onclick="window.print()">طباعة الفاتورة</button>
             </div>
         </div>
     </div>
 
-    <!-- إدخال الأبواب والشبابيك -->
-    <div class="form-section">
-        <h4 style="margin-top:0;">إضافة عنصر للفاتورة (أدخل المقاس بالمتر، مثلاً: 1 أو 1.5 أو 1.20)</h4>
-        <div class="row">
-            <div class="col">
-                <label>النوع:</label>
-                <select id="itemType" onchange="toggleSystemOptions()">
-                    <option value="window">شباك</option>
-                    <option value="door">باب</option>
-                </select>
-            </div>
-            <div class="col" id="systemCol">
-                <label>نظام الفتح:</label>
-                <select id="itemSystem">
-                    <option value="casement1">مفصلي (ضلفة واحدة)</option>
-                    <option value="casement2">مفصلي (ضلفتين)</option>
-                    <option value="sliding">سحاب</option>
-                </select>
-            </div>
-            <div class="col">
-                <label>عرض الرفام (متر):</label>
-                <input type="number" id="itemWidth" step="0.01" placeholder="مثال: 1">
-            </div>
-            <div class="col">
-                <label>ارتفاع الرفام (متر):</label>
-                <input type="number" id="itemHeight" step="0.01" placeholder="مثال: 1">
-            </div>
-            <div class="col">
-                <label>العدد:</label>
-                <input type="number" id="itemQty" value="1" min="1">
+    <!-- 2. المخزن وتلوين البضاعة -->
+    <div id="inventory" class="tab-content">
+        <div class="card">
+            <h3>إضافة/تحديث الأصناف</h3>
+            <div class="form-grid">
+                <input type="text" id="pBarcode" placeholder="الباركود">
+                <input type="text" id="pName" placeholder="اسم السلعة">
+                <input type="number" id="pBuyPrice" placeholder="سعر الشراء">
+                <input type="number" id="pSellPrice" placeholder="سعر البيع">
+                <input type="number" id="pQty" placeholder="الكمية">
+                <button onclick="saveProduct()">حفظ السلعة</button>
             </div>
         </div>
-        <button class="btn-add" onclick="addItem()">+ إضافة القائمة للفاتورة</button>
+        <div class="card">
+            <h3>حالة المخزون (نظام التلوين الذكي)</h3>
+            <p><small>🔴 أحمر: نفدت | 🟡 أصفر: كمية منخفضة (أقل من 5) | 🟢 أخضر: كمية ممتازة</small></p>
+            <table>
+                <thead>
+                    <tr><th>الباركود</th><th>السلعة</th><th>سعر الشراء</th><th>سعر البيع</th><th>المخزون</th></tr>
+                </thead>
+                <tbody id="inventoryList"></tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- جدول البنود المدخلة -->
-    <table>
-        <thead>
-            <tr>
-                <th>القسم</th>
-                <th>النوع</th>
-                <th>النظام</th>
-                <th>مقاس الرفام (متر)</th>
-                <th>العدد</th>
-                <th>إجراء</th>
-            </tr>
-        </thead>
-        <tbody id="itemsTable">
-            <!-- البنود المضافة تظهر هنا -->
-        </tbody>
-    </table>
-
-    <button style="width:100%; background:#2c3e50; color:#fff; border:none; padding:12px; font-size:16px; font-weight:bold; margin-top:15px; border-radius:4px; cursor:pointer;" onclick="calculateInvoice()">حساب الفاتورة وإخراج المواد</button>
-
-    <!-- المخرجات النهائية -->
-    <div class="result-box" id="resultBox" style="display:none;">
-        <div class="result-title">فاتورة المواد والاكسسوارات المطلوبة</div>
-        <div id="resultOutput" style="white-space: pre-wrap; font-family: monospace; font-size: 15px;"></div>
-        <a id="whatsappLink" href="#" target="_blank" class="whatsapp-btn">إرسال الفاتورة عبر واتساب</a>
+    <!-- 3. كشف حساب الزبائن (مدين ودائن) -->
+    <div id="customers" class="tab-content">
+        <div class="card">
+            <h3>إضافة زبون جديد</h3>
+            <div class="form-grid">
+                <input type="text" id="cName" placeholder="اسم الزبون">
+                <input type="text" id="cPhone" placeholder="رقم الهاتف">
+                <button onclick="saveCustomer()">إضافة زبون</button>
+            </div>
+        </div>
+        <div class="card">
+            <h3>تسديد ديون (سند قبض)</h3>
+            <div class="form-grid">
+                <select id="payCustomerSelect"></select>
+                <input type="number" id="payAmount" placeholder="المبلغ التسديد">
+                <button class="btn-success" onclick="payDebt()">تسجيل الدفعة (دائن)</button>
+            </div>
+        </div>
+        <div class="card">
+            <h3>كشف حسابات الزبائن (المدين والدائن)</h3>
+            <table>
+                <thead>
+                    <tr><th>اسم الزبون</th><th>الهاتف</th><th>الرصيد (الديون)</th><th>الحالة</th><th>كشف حساب</th></tr>
+                </thead>
+                <tbody id="customerList"></tbody>
+            </table>
+        </div>
     </div>
-</div>
+
+    <!-- 4. التقارير وجرد نهاية السنة -->
+    <div id="reports" class="tab-content">
+        <div class="card">
+            <h3>تقرير مبيعات اليوم وجرد نهاية السنة</h3>
+            <button class="btn-print" onclick="window.print()">طباعة التقرير والجرد</button>
+            <hr>
+            <h4>إحصائيات مالية عامة:</h4>
+            <p>إجمالي المبيعات: <strong id="repSales">0.00</strong> د.ل</p>
+            <p>إجمالي الديون القائمة على الزبائن (مدين): <strong id="repDebts" style="color:var(--danger)">0.00</strong> د.ل</p>
+            <p>قيمة تقييم بضاعة المخزن (سعر الشراء): <strong id="repStockBuy">0.00</strong> د.ل</p>
+            <p>قيمة تقييم بضاعة المخزن (سعر البيع المتوقع): <strong id="repStockSell">0.00</strong> د.ل</p>
+
+            <h4>جدول جرد نهاية السنة التفصيلي للمخزن:</h4>
+            <table>
+                <thead>
+                    <tr><th>الباركود</th><th>اسم السلعة</th><th>الكمية بالمخزن</th><th>تكلفة الشراء</th><th>إجمالي التكلفة</th></tr>
+                </thead>
+                <tbody id="yearlyInventory"></tbody>
+            </table>
+        </div>
+    </div>
 
 <script>
-    let invoiceItems = [];
+    let db;
+    let cart = [];
 
-    function resetInvoiceOnMaterialChange() {
-        invoiceItems = [];
-        updateTable();
-        document.getElementById('resultBox').style.display = 'none';
+    // فتح قاعدة البيانات IndexedDB الضخمة
+    const request = indexedDB.open("AzadirDB", 1);
+    request.onupgradeneeded = function(e) {
+        db = e.target.result;
+        db.createObjectStore("products", { keyPath: "barcode" });
+        db.createObjectStore("customers", { keyPath: "id", autoIncrement: true });
+        db.createObjectStore("sales", { keyPath: "id", autoIncrement: true });
+        db.createObjectStore("payments", { keyPath: "id", autoIncrement: true });
+    };
+    request.onsuccess = function(e) {
+        db = e.target.result;
+        loadAllData();
+    };
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+        loadAllData();
     }
 
-    function toggleSystemOptions() {
-        const type = document.getElementById('itemType').value;
-        const systemCol = document.getElementById('systemCol');
-        if (type === 'door') {
-            systemCol.style.display = 'none';
-        } else {
-            systemCol.style.display = 'block';
-        }
+    // إدارة الأصناف والـ Inventory
+    function saveProduct() {
+        const barcode = document.getElementById('pBarcode').value;
+        const name = document.getElementById('pName').value;
+        const buy = parseFloat(document.getElementById('pBuyPrice').value) || 0;
+        const sell = parseFloat(document.getElementById('pSellPrice').value) || 0;
+        const qty = parseInt(document.getElementById('pQty').value) || 0;
+
+        if(!barcode || !name) return alert("ادخل البيانات الأساسية!");
+
+        const tx = db.transaction("products", "readwrite");
+        tx.objectStore("products").put({ barcode, name, buy, sell, qty });
+        tx.oncomplete = () => { alert("تم حفظ السلعة!"); loadAllData(); };
     }
 
-    function addItem() {
-        const mat = document.getElementById('materialType').value;
-        const type = document.getElementById('itemType').value;
-        const system = type === 'door' ? 'door' : document.getElementById('itemSystem').value;
-        const w = parseFloat(document.getElementById('itemWidth').value);
-        const h = parseFloat(document.getElementById('itemHeight').value);
-        const qty = parseInt(document.getElementById('itemQty').value);
+    // إدارة الزبائن والحسابات
+    function saveCustomer() {
+        const name = document.getElementById('cName').value;
+        const phone = document.getElementById('cPhone').value;
+        if(!name) return alert("ادخل اسم الزبون!");
 
-        if (!w || !h || !qty) {
-            alert("الرجاء إدخال المقاس والعدد بشكل صحيح");
-            return;
-        }
+        const tx = db.transaction("customers", "readwrite");
+        tx.objectStore("customers").add({ name, phone, balance: 0 });
+        tx.oncomplete = () => { alert("تمت إضافة الزبون!"); loadAllData(); };
+    }
 
-        invoiceItems.push({ mat, type, system, w, h, qty });
-        updateTable();
+    function payDebt() {
+        const custId = parseInt(document.getElementById('payCustomerSelect').value);
+        const amount = parseFloat(document.getElementById('payAmount').value);
+        if(!custId || !amount) return alert("اختر الزبون والمبلغ!");
+
+        const tx = db.transaction(["customers", "payments"], "readwrite");
+        const store = tx.objectStore("customers");
         
-        document.getElementById('itemWidth').value = '';
-        document.getElementById('itemHeight').value = '';
-        document.getElementById('itemQty').value = '1';
+        store.get(custId).onsuccess = function(e) {
+            let cust = e.target.result;
+            cust.balance -= amount; // تسديد (دائن) يخفض الدين
+            store.put(cust);
+            tx.objectStore("payments").add({ customerId: custId, amount, date: new Date() });
+        };
+        tx.oncomplete = () => { alert("تم تسجيل الدفعة بنجاح!"); loadAllData(); };
     }
 
-    function updateTable() {
-        const tbody = document.getElementById('itemsTable');
-        tbody.innerHTML = '';
-        
-        invoiceItems.forEach((item, index) => {
-            let sysText = item.type === 'door' ? 'باب' : 
-                         item.system === 'casement1' ? 'مفصلي ضلفة' : 
-                         item.system === 'casement2' ? 'مفصلي ضلفتين' : 'سحاب';
-            
-            tbody.innerHTML += `
-                <tr>
-                    <td>${item.mat.toUpperCase()}</td>
-                    <td>${item.type === 'window' ? 'شباك' : 'باب'}</td>
-                    <td>${sysText}</td>
-                    <td>${item.w}م × ${item.h}م</td>
-                    <td>${item.qty}</td>
-                    <td><button class="btn-del" onclick="removeItem(${index})">حذف</button></td>
-                </tr>
-            `;
-        });
-    }
+    // شاشة الفاتورة (POS)
+    function addToCart() {
+        const barcode = document.getElementById('posBarcode').value;
+        const tx = db.transaction("products", "readonly");
+        tx.objectStore("products").get(barcode).onsuccess = function(e) {
+            const prod = e.target.result;
+            if(!prod) return alert("السلعة غير موجودة!");
+            if(prod.qty <= 0) return alert("السلعة نفدت من المخزن!");
 
-    function removeItem(index) {
-        invoiceItems.splice(index, 1);
-        updateTable();
-    }
-
-    function calculateInvoice() {
-        if (invoiceItems.length === 0) {
-            alert("الرجاء إضافة عناصر للفاتورة أولاً");
-            return;
-        }
-
-        const barLen = parseFloat(document.getElementById('barLength').value);
-        const matType = document.getElementById('materialType').value;
-
-        // الأطوال بالأمتار
-        let totalFrameMeters = 0;       // حلق
-        let totalWinMeters = 0;         // عود شباك (أضلاع الضلفة)
-        let totalDoorMeters = 0;        // عود باب
-        let totalTMeters = 0;           // تي وجهين
-        let totalPackitaNormMeters = 0; // باكيتا عادية
-        let totalPackitaDoubleMeters = 0; // باكيتا دبل
-        let totalRetiMeters = 0;        // عود ريتي
-        let totalIronMeters = 0;        // حديد تدعيم (على طول الحلق)
-
-        // أعداد العناصر والإكسسوارات
-        let countWindows = 0;
-        let countDoors = 0;
-        
-        let lockFull = 0;
-        let doorHinges = 0;
-        let winHinges = 0;
-        let winHandles = 0;
-        let retiBones = 0;    // عظمة ريتي
-        let retiSeats = 0;    // طقم كرسي ريتي
-        let retiCarriers = 0; // شيال ريتي
-
-        let espagHandles = 0;
-        let psCorners = 0;
-        let alumLock = 0;
-
-        invoiceItems.forEach(item => {
-            const wM = item.w; // عرض الرفام
-            const hM = item.h; // طول/ارتفاع الرفام
-            const qty = item.qty;
-
-            // 1. الحلق = محيط الرفام
-            let framePerimeter = (wM + hM) * 2 * qty;
-            totalFrameMeters += framePerimeter;
-            totalIronMeters += framePerimeter; // حديد على طول الحلق
-
-            if (item.type === 'door') {
-                countDoors += qty;
-                // باب: عرض الرفام - 0.05، وطول الرفام - 0.05 (مثل الضلفة)
-                let sashW = wM - 0.05;
-                let sashH = hM - 0.05;
-                let doorSash = (sashW + sashH) * 2 * qty;
-                totalDoorMeters += doorSash;
-
-                if (matType === 'pvc') {
-                    totalPackitaDoubleMeters += doorSash; // باكيتا دبل للباب
-                    lockFull += 1 * qty;
-                    doorHinges += 4 * qty;
-                } else {
-                    alumLock += 1 * qty;
-                    doorHinges += 3 * qty;
-                }
-            } else {
-                countWindows += qty;
-
-                if (matType === 'pvc') {
-                    if (item.system === 'casement1') {
-                        // شباك ضلفة واحدة: 
-                        // عرض الضلفة = عرض الرفام - 0.05
-                        // طول الضلفة = طول الرفام - 0.05
-                        let sashW = wM - 0.05;
-                        let sashH = hM - 0.05;
-                        let winSash = (sashW + sashH) * 2 * qty;
-                        
-                        totalWinMeters += winSash;
-                        totalRetiMeters += winSash;       // عود ريتي نفس طول الضلفة
-                        totalPackitaNormMeters += winSash; // باكيتا عادية
-
-                        winHandles += 1 * qty;
-                        winHinges += 3 * qty;
-                        
-                        retiBones += 4 * qty;    // 4 عظمات ريتي للضلفة الواحدة
-                        retiSeats += 2 * qty;    // 2 طقم كرسي
-                        retiCarriers += 2 * qty; // 2 شيال
-
-                    } else if (item.system === 'casement2') {
-                        // شباك ضلفتين (حسب صورتك):
-                        // عرض الضلفة = (عرض الرفام - 0.054) ÷ 2
-                        // طول الضلفة = طول الرفام - 0.05
-                        let singleSashW = (wM - 0.054) / 2;
-                        let sashH = hM - 0.05;
-                        let oneSashPerimeter = (singleSashW + sashH) * 2;
-                        let winSash = oneSashPerimeter * 2 * qty; // للضلفتين
-                        
-                        totalWinMeters += winSash;
-                        totalTMeters += hM * qty;         // تي وجهين في النص (بطول الرفام)
-                        totalRetiMeters += winSash;       // عود ريتي للضلفتين
-                        totalPackitaNormMeters += winSash; // باكيتا عادية
-
-                        winHandles += 2 * qty;
-                        winHinges += 6 * qty;
-                        
-                        retiBones += 8 * qty;    // 4 عظمات لكل ضلفة (المجموع 8)
-                        retiSeats += 4 * qty;    // 2 لكل ضلفة (المجموع 4)
-                        retiCarriers += 4 * qty; // 2 لكل ضلفة (المجموع 4)
-
-                    } else if (item.system === 'sliding') {
-                        let winSash = (wM + hM) * 2 * qty;
-                        totalWinMeters += winSash;
-                        totalPackitaNormMeters += winSash;
-                    }
-                } else { // ألومنيوم
-                    if (item.system === 'casement1') {
-                        let winSash = ((wM - 0.05) + (hM - 0.05)) * 2 * qty;
-                        totalWinMeters += winSash;
-                        espagHandles += 1 * qty;
-                        winHinges += 3 * qty;
-                        psCorners += 8 * qty;
-                    } else if (item.system === 'casement2') {
-                        let winSash = ((((wM - 0.054)/2) + (hM - 0.05)) * 2 * 2) * qty;
-                        totalWinMeters += winSash;
-                        totalTMeters += hM * qty;
-                        espagHandles += 2 * qty;
-                        winHinges += 6 * qty;
-                        psCorners += 12 * qty;
-                    } else if (item.system === 'sliding') {
-                        let winSash = (wM + hM) * 2 * qty;
-                        totalWinMeters += winSash;
-                        psCorners += 8 * qty;
-                    }
-                }
+            const exist = cart.find(i => i.barcode === barcode);
+            if(exist) {
+                if(exist.qty + 1 > prod.qty) return alert("الكمية لا تكفي بالمخزن!");
+                exist.qty++;
+            end } else {
+                cart.push({ barcode: prod.barcode, name: prod.name, price: prod.sell, buyPrice: prod.buy, qty: 1 });
             }
+            document.getElementById('posBarcode').value = '';
+            renderCart();
+        };
+    }
+
+    function renderCart() {
+        const tbody = document.getElementById('cartTable');
+        tbody.innerHTML = '';
+        let total = 0;
+        cart.forEach((item, index) => {
+            let sub = item.price * item.qty;
+            total += sub;
+            tbody.innerHTML += `<tr>
+                <td>${item.name}</td><td>${item.price}</td><td>${item.qty}</td><td>${sub.toFixed(2)}</td>
+                <td class="no-print"><button class="btn-danger" onclick="cart.splice(${index},1);renderCart();">حذف</button></td>
+            </tr>`;
+        });
+        document.getElementById('cartTotal').innerText = total.toFixed(2);
+    }
+
+    function checkout(type) {
+        if(cart.length === 0) return alert("الفاتورة فارغة!");
+        const custId = parseInt(document.getElementById('posCustomer').value);
+        const total = parseFloat(document.getElementById('cartTotal').innerText);
+
+        if(type === 'Credit' && !custId) return alert("يجب اختيار زبون للبيع الآجل (الدَيْن)!");
+
+        const tx = db.transaction(["products", "sales", "customers"], "readwrite");
+        const prodStore = tx.objectStore("products");
+        
+        // خصم من المخزون
+        cart.forEach(item => {
+            prodStore.get(item.barcode).onsuccess = function(e) {
+                let p = e.target.result;
+                p.qty -= item.qty;
+                prodStore.put(p);
+            };
         });
 
-        // تحويل الأطوال إلى أعواد (جبر الكسور لعود كامل)
-        let barsFrame = Math.ceil(totalFrameMeters / barLen);
-        let barsWin = Math.ceil(totalWinMeters / barLen);
-        let barsDoor = Math.ceil(totalDoorMeters / barLen);
-        let barsT = Math.ceil(totalTMeters / barLen);
-        let barsPackitaNorm = Math.ceil(totalPackitaNormMeters / barLen);
-        let barsPackitaDouble = Math.ceil(totalPackitaDoubleMeters / barLen);
-        let barsReti = Math.ceil(totalRetiMeters / barLen);
-        let barsIron = Math.ceil(totalIronMeters / barLen);
+        // تسجيل المبيعات
+        tx.objectStore("sales").add({ date: new Date(), items: cart, total, type, customerId: custId || null });
 
-        // كتابة نص الفاتورة (أصناف وأعداد فقط بدون ملاحظات)
-        let output = `شركة أزادير (Azadir) - فرع القوارشة\n`;
-        output += `فاتورة طلب مواد ${matType.toUpperCase()} (طول العود: ${barLen} متر)\n`;
-        output += `------------------------------------\n`;
-        output += `إجمالي عدد الشبابيك: ${countWindows}\n`;
-        output += `إجمالي عدد الأبواب: ${countDoors}\n`;
-        output += `------------------------------------\n`;
-        output += `الأعواد المطلوبة:\n`;
-        if (barsFrame > 0) output += `- عود حلق: ${barsFrame}\n`;
-        if (barsWin > 0) output += `- عود شباك: ${barsWin}\n`;
-        if (barsDoor > 0) output += `- عود باب: ${barsDoor}\n`;
-        if (barsT > 0) output += `- عود تي وجهين: ${barsT}\n`;
-        if (barsReti > 0) output += `- عود ريتي: ${barsReti}\n`;
-        if (barsPackitaNorm > 0) output += `- عود باكيتا عادية: ${barsPackitaNorm}\n`;
-        if (barsPackitaDouble > 0) output += `- عود باكيتا دبل: ${barsPackitaDouble}\n`;
-        if (barsIron > 0) output += `- حديد تدعيم (سيخ): ${barsIron} عود\n`;
-
-        output += `------------------------------------\n`;
-        output += `الإكسسوارات المطلوبة:\n`;
-        if (matType === 'pvc') {
-            if (lockFull > 0) output += `- قفل باب كامل: ${lockFull}\n`;
-            if (doorHinges > 0) output += `- مفصلات باب: ${doorHinges}\n`;
-            if (winHandles > 0) output += `- يد شباك: ${winHandles}\n`;
-            if (winHinges > 0) output += `- مفصلات شباك: ${winHinges}\n`;
-            if (retiBones > 0) output += `- عظمة ريتي: ${retiBones}\n`;
-            if (retiSeats > 0) output += `- طقم كرسي ريتي: ${retiSeats}\n`;
-            if (retiCarriers > 0) output += `- شيال ريتي: ${retiCarriers}\n`;
-        } else {
-            if (alumLock > 0) output += `- كيلون باب ألومنيوم: ${alumLock}\n`;
-            if (doorHinges > 0) output += `- مفصلات باب ألومنيوم: ${doorHinges}\n`;
-            if (espagHandles > 0) output += `- يد سبانيولية: ${espagHandles}\n`;
-            if (winHinges > 0) output += `- مفصلات شباك ألومنيوم: ${winHinges}\n`;
-            if (psCorners > 0) output += `- زوايا تجميع PS: ${psCorners}\n`;
+        // في حالة الدين: تحديث رصيد الزبون (مدين)
+        if(type === 'Credit' && custId) {
+            const custStore = tx.objectStore("customers");
+            custStore.get(custId).onsuccess = function(e) {
+                let c = e.target.result;
+                c.balance += total;
+                custStore.put(c);
+            };
         }
 
-        document.getElementById('resultOutput').innerText = output;
-        document.getElementById('resultBox').style.display = 'block';
+        tx.oncomplete = () => {
+            alert("تم حفظ الفاتورة بنجاح!");
+            cart = [];
+            renderCart();
+            loadAllData();
+        };
+    }
 
-        const encodedText = encodeURIComponent(output);
-        document.getElementById('whatsappLink').href = `https://wa.me/218945110070?text=${encodedText}`;
+    // تحميل وعرض البيانات الكلية (تلوين الحسابات والمخزن)
+    function loadAllData() {
+        // 1. عرض وتلوين المخزن
+        const invBody = document.getElementById('inventoryList');
+        const yearBody = document.getElementById('yearlyInventory');
+        invBody.innerHTML = ''; yearBody.innerHTML = '';
+        let stockBuyTotal = 0, stockSellTotal = 0;
+
+        db.transaction("products", "readonly").objectStore("products").openCursor().onsuccess = function(e) {
+            const cursor = e.target.result;
+            if(cursor) {
+                const p = cursor.value;
+                // حساب التلوين حسب الكمية
+                let colorClass = 'stock-ok';
+                if(p.qty === 0) colorClass = 'stock-out';
+                else if(p.qty < 5) colorClass = 'stock-low';
+
+                invBody.innerHTML += `<tr class="${colorClass}">
+                    <td>${p.barcode}</td><td>${p.name}</td><td>${p.buy}</td><td>${p.sell}</td><td>${p.qty}</td>
+                </tr>`;
+
+                let costSum = p.buy * p.qty;
+                stockBuyTotal += costSum;
+                stockSellTotal += (p.sell * p.qty);
+
+                yearBody.innerHTML += `<tr>
+                    <td>${p.barcode}</td><td>${p.name}</td><td>${p.qty}</td><td>${p.buy}</td><td>${costSum.toFixed(2)}</td>
+                </tr>`;
+
+                cursor.continue();
+            } else {
+                document.getElementById('repStockBuy').innerText = stockBuyTotal.toFixed(2);
+                document.getElementById('repStockSell').innerText = stockSellTotal.toFixed(2);
+            }
+        };
+
+        // 2. عرض كشف الزبائن والديون
+        const custBody = document.getElementById('customerList');
+        const posCustSelect = document.getElementById('posCustomer');
+        const payCustSelect = document.getElementById('payCustomerSelect');
+        
+        custBody.innerHTML = '';
+        posCustSelect.innerHTML = '<option value="">اختر الزبون (نقدي)</option>';
+        payCustSelect.innerHTML = '<option value="">اختر الزبون للتسديد</option>';
+        let totalDebts = 0;
+
+        db.transaction("customers", "readonly").objectStore("customers").openCursor().onsuccess = function(e) {
+            const cursor = e.target.result;
+            if(cursor) {
+                const c = cursor.value;
+                totalDebts += (c.balance > 0 ? c.balance : 0);
+                
+                let stateText = c.balance > 0 ? `<span style="color:var(--danger)">مطلوب (مدين): ${c.balance.toFixed(2)}</span>` : 
+                                (c.balance < 0 ? `<span style="color:var(--success)">دائن له: ${Math.abs(c.balance).toFixed(2)}</span>` : 'خالي الطرف');
+
+                custBody.innerHTML += `<tr>
+                    <td>${c.name}</td><td>${c.phone}</td><td>${c.balance.toFixed(2)}</td><td>${stateText}</td>
+                    <td class="no-print"><button onclick="alert('إجمالي مطلوبات الزبون: ${c.balance} د.ل')">تقرير</button></td>
+                </tr>`;
+
+                posCustSelect.innerHTML += `<option value="${c.id}">${c.name} (دين: ${c.balance})</option>`;
+                payCustSelect.innerHTML += `<option value="${c.id}">${c.name} (دين: ${c.balance})</option>`;
+
+                cursor.continue();
+            } else {
+                document.getElementById('repDebts').innerText = totalDebts.toFixed(2);
+            }
+        };
+
+        // 3. حساب إجمالي المبيعات
+        let totalSales = 0;
+        db.transaction("sales", "readonly").objectStore("sales").openCursor().onsuccess = function(e) {
+            const cursor = e.target.result;
+            if(cursor) {
+                totalSales += cursor.value.total;
+                cursor.continue();
+            } else {
+                document.getElementById('repSales').innerText = totalSales.toFixed(2);
+            }
+        };
     }
 </script>
-
 </body>
 </html>
